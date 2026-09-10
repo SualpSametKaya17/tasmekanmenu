@@ -672,7 +672,6 @@ function showLockout(ms){
   _lockInterval=setInterval(tick,1000); tick();
 }
 async function tryLogin(){
-  document.getElementById('pwdInput').onkeydown=e=>{ if(e.key==='Enter') tryLogin(); };
   const d=getAttempts();
   if(d.lockedUntil>Date.now()) return;
   const pwd=document.getElementById('pwdInput').value;
@@ -730,6 +729,8 @@ function switchTab(btn){
 
 // ═══ HELPERS ═════════════════════════════════════════════
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+// inline onclick="fn('...')" içine gömülecek değerler için: tek tırnak/backslash da JS-güvenli hale getirilir
+function escAttrJs(s){ return esc(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 
 function currentList(){
   const lang=document.getElementById('filterLang').value;
@@ -759,8 +760,17 @@ function nextId(){
   return max+1;
 }
 
+function uniqueProductsForPage(page){
+  const seen=new Map();
+  for(const lang of Object.keys(gData))
+    if(typeof gData[lang]==='object'&&!Array.isArray(gData[lang])&&Array.isArray(gData[lang][page]))
+      for(const p of gData[lang][page])
+        if(!seen.has(p.id)) seen.set(p.id,p);
+  return [...seen.values()];
+}
 function getCatsForPage(page){
-  const fromProds=[...new Set((gData.tr?.[page]||[]).map(p=>p.cat).filter(Boolean))];
+  // TR ve EN ürünlerinin ikisi de taranır; yalnız-EN ürünler de kategori listesine girer
+  const fromProds=[...new Set(uniqueProductsForPage(page).map(p=>p.cat).filter(Boolean))];
   const fromStore=gData._categories?.[page]||[];
   return [...new Set([...fromProds,...fromStore])].sort();
 }
@@ -1203,15 +1213,15 @@ function renderCategories(){
   const grid=document.getElementById('catGrid');
   if(!cats.length){ grid.innerHTML=`<p style="color:var(--muted);padding:8px 0;grid-column:1/-1">Bu sayfada henüz kategori yok.</p>`; return; }
   grid.innerHTML=cats.map(cat=>{
-    const count=(gData.tr?.[page]||[]).filter(p=>p.cat===cat).length;
+    const count=uniqueProductsForPage(page).filter(p=>p.cat===cat).length;
     return `<div class="cat-card">
       <div>
         <div class="cat-name">${esc(cat)}</div>
         <div class="cat-count">${count} ürün</div>
       </div>
       <div class="cat-actions">
-        <button class="btn btn-ghost btn-sm" onclick="openCatEdit('${esc(cat)}','${page}')">Düzenle</button>
-        <button class="btn btn-red btn-sm"   onclick="deleteCategory('${esc(cat)}','${page}')">Sil</button>
+        <button class="btn btn-ghost btn-sm" onclick="openCatEdit('${escAttrJs(cat)}','${page}')">Düzenle</button>
+        <button class="btn btn-red btn-sm"   onclick="deleteCategory('${escAttrJs(cat)}','${page}')">Sil</button>
       </div>
     </div>`;
   }).join('');
@@ -1252,7 +1262,7 @@ function saveCatEdit(){
   showToast('✓ Kategori güncellendi.','success');
 }
 function deleteCategory(cat,page){
-  const count=(gData.tr?.[page]||[]).filter(p=>p.cat===cat).length;
+  const count=uniqueProductsForPage(page).filter(p=>p.cat===cat).length;
   const msg=count>0
     ? `"${cat}" kategorisinde ${count} ürün var. Silinirse bu ürünler "Kategorisiz" olur. Devam edilsin mi?`
     : `"${cat}" kategorisini silmek istiyor musun?`;
