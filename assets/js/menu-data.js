@@ -130,7 +130,7 @@ const MENU_DATA = {
       {
         "cat": "kahvaltılık",
         "img": "Menü/Kahvaltılıklar/taşmekan kahvaltı 1 kişilik.webp",
-        "name": "<p style=\"font-size: 16pt;\"> Taşmekan Tabak Kahvaltı 1 Kişilik</p>",
+        "name": "Taşmekan Tabak Kahvaltı 1 Kişilik",
         "desc": "Taşmekan Tabak Kahvaltı 1 Kişilik",
         "price": 600,
         "id": 15,
@@ -139,7 +139,7 @@ const MENU_DATA = {
       {
         "cat": "kahvaltılık",
         "img": "Menü/Kahvaltılıklar/taşmekan kahvaltı 2 kişilik.webp",
-        "name": "<p style=\"font-size: 16pt;\"> Taşmekan Serpme Kahvaltı 2 Kişilik</p>",
+        "name": "Taşmekan Serpme Kahvaltı 2 Kişilik",
         "desc": "Taşmekan Serpme Kahvaltı 2 Kişilik",
         "price": "1200",
         "id": 16,
@@ -3211,7 +3211,7 @@ const MENU_DATA = {
       {
         "cat": "kahvaltılık",
         "img": "Menü/Kahvaltılıklar/taşmekan kahvaltı 1 kişilik.webp",
-        "name": "<p style=\"font-size: 16pt;\">Taşmekan Breakfast for 1 Person</p>",
+        "name": "Taşmekan Breakfast for 1 Person",
         "desc": "Taşmekan Breakfast for 1 Person",
         "price": 600,
         "id": 15,
@@ -3220,7 +3220,7 @@ const MENU_DATA = {
       {
         "cat": "kahvaltılık",
         "img": "Menü/Kahvaltılıklar/taşmekan kahvaltı 2 kişilik.webp",
-        "name": "<p style=\"font-size: 16pt;\"> Taşmekan Breakfast for 2 Persons</p>",
+        "name": "Taşmekan Breakfast for 2 Persons",
         "desc": "Taşmekan Breakfast for 2 Persons",
         "price": "1200",
         "id": 16,
