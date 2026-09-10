@@ -1253,10 +1253,18 @@ function saveCatEdit(){
 }
 function deleteCategory(cat,page){
   const count=(gData.tr?.[page]||[]).filter(p=>p.cat===cat).length;
-  const msg=count>0?`"${cat}" kategorisinde ${count} ürün var. Sil?`:`"${cat}" kategorisini silmek istiyor musun?`;
+  const msg=count>0
+    ? `"${cat}" kategorisinde ${count} ürün var. Silinirse bu ürünler "Kategorisiz" olur. Devam edilsin mi?`
+    : `"${cat}" kategorisini silmek istiyor musun?`;
   if(!confirm(msg)) return;
   if(gData._categories?.[page]) gData._categories[page]=gData._categories[page].filter(c=>c!==cat);
-  saveData(); renderCategories();
+  // kategoriyi kullanan ürünler kalırsa liste (ürünlerden türetildiği için) geri gelir;
+  // bu yüzden o ürünlerin kategorisini de temizliyoruz
+  if(count>0)
+    for(const lang of Object.keys(gData))
+      if(typeof gData[lang]==='object'&&!Array.isArray(gData[lang])&&gData[lang][page])
+        gData[lang][page].forEach(p=>{ if(p.cat===cat) p.cat=''; });
+  saveData(); renderCategories(); render();
   showToast('Kategori silindi.','warn');
 }
 
