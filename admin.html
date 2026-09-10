@@ -1163,7 +1163,8 @@ function addProduct(){
   const price =document.getElementById('addPrice').value.trim()||0;
   const img   =document.getElementById('addImg').value.trim();
   const lang  =document.getElementById('addLang').value;
-  if(!cat||!nameTr){ showToast('Kategori ve Türkçe ad zorunludur.','error'); return; }
+  const nameRequired = (lang==='en') ? nameEn : nameTr;
+  if(!cat||!nameRequired){ showToast(lang==='en' ? 'Kategori ve İngilizce ad zorunludur.' : 'Kategori ve Türkçe ad zorunludur.','error'); return; }
   if(img && !img.startsWith('Menü/')){ showToast('⚠ Görsel için önce KLASÖR seçmelisin (örn. Izgaralar). Yol "Menü/..." ile başlamalı.','error'); return; }
   const id=nextId();
   const base={id,active:true,cat,img,price};
